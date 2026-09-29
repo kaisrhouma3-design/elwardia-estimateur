@@ -29,8 +29,6 @@ const columns = [
   { key:'unitPrice', label:'PU HT', width:64, align:'right' },
   { key:'vatRate', label:'TVA %', width:40, align:'right' },
   { key:'ht', label:'Total HT', width:65, align:'right' },
-  { key:'vat', label:'TVA', width:56, align:'right' },
-  { key:'ttc', label:'Total TTC', width:74, align:'right' }
 ];
 
 function round3(value) { return Math.round((Number(value || 0) + Number.EPSILON) * 1000) / 1000; }

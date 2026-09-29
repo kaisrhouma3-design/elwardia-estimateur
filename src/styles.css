@@ -26,3 +26,5 @@
 .company-banner{grid-template-columns:120px minmax(0,1fr)}.company-logo{width:120px;height:72px;object-fit:contain;border-radius:6px;background:#fff}@media(max-width:760px){.company-banner{grid-template-columns:92px minmax(0,1fr)}.company-logo{width:92px;height:62px}}@media print{.company-banner{grid-template-columns:90px minmax(0,1fr)}.company-logo{width:90px;height:58px}}
 
 @media print{.print-heading{display:block;margin:10px 0 7px;color:#18324a;font-family:Manrope,'DM Sans',Arial,sans-serif;font-size:14px;font-weight:800;letter-spacing:.02em}}
+
+@media print{.quote-table .col-vatamt,.quote-table .col-ttc{display:none!important}}
