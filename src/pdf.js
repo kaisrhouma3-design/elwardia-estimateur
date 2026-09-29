@@ -4,6 +4,7 @@ const MARGIN = 28;
 const CONTENT_W = PAGE_W - MARGIN * 2;
 import { companyInfo } from './company.js';
 import { amountInWords } from './money-words.js';
+import { companyLogoJpegBase64 } from './company-logo-data.js';
 
 const TABLE_TOP = 151;
 const FOOTER_TOP = 570;
@@ -13,6 +14,12 @@ const cp1252 = {
   '€':0x80,'‚':0x82,'ƒ':0x83,'„':0x84,'…':0x85,'†':0x86,'‡':0x87,'ˆ':0x88,'‰':0x89,'Š':0x8a,'‹':0x8b,'Œ':0x8c,'Ž':0x8e,
   '‘':0x91,'’':0x92,'“':0x93,'”':0x94,'•':0x95,'–':0x96,'—':0x97,'˜':0x98,'™':0x99,'š':0x9a,'›':0x9b,'œ':0x9c,'ž':0x9e,'Ÿ':0x9f
 };
+function logoHex() {
+  const binary = atob(companyLogoJpegBase64);
+  let hex = '';
+  for (let i = 0; i < binary.length; i++) hex += binary.charCodeAt(i).toString(16).padStart(2, '0').toUpperCase();
+  return hex;
+}
 const columns = [
   { key:'ref', label:'Ref.', width:36 },
   { key:'lot', label:'Lot', width:94 },
@@ -82,6 +89,10 @@ function estimateLogoCmd(x, top, size) {
   stream += lineCmd(...point(211,413), ...point(321,305), '#3D7A68', 56*scale);
   return stream;
 }
+function logoImageCmd(x, top, width, height) {
+  const y = PAGE_H - top - height;
+  return `q ${width.toFixed(2)} 0 0 ${height.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)} cm /Im1 Do Q\n`;
+}
 function wrapText(text, maxWidth, size) {
   const words = cleanText(text).split(' ').filter(Boolean);
   const lines = [];
@@ -98,8 +109,8 @@ function wrapText(text, maxWidth, size) {
 function createContentPage(estimate, pageIndex, includeTableHeader = true) {
   let stream = '';
   const title = cleanText(estimate.title || 'Devis de travaux');
-  stream += estimateLogoCmd(MARGIN, 16, 42);
-  const companyX = MARGIN + 53;
+  stream += logoImageCmd(MARGIN, 16, 50, 41);
+  const companyX = MARGIN + 60;
   stream += textCmd(companyInfo.name, companyX, 17, 10, '#18324A', true);
   stream += textCmd(`Adresse : ${companyInfo.address}`, companyX, 31, 7, '#4E626D');
   stream += textCmd(`MF : ${companyInfo.fiscalId} · Tél. : ${companyInfo.phone}`, companyX, 42, 7, '#4E626D');
@@ -221,15 +232,17 @@ function summaryBlock(estimate, page) {
 function buildObjects(pages) {
   const objects = [];
   const addObject = value => { objects.push(value); return objects.length; };
+  const imageHex = logoHex();
   addObject('<< /Type /Catalog /Pages 2 0 R >>');
   addObject('');
   addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
   addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+  addObject(`<< /Type /XObject /Subtype /Image /Width 457 /Height 371 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter [/ASCIIHexDecode /DCTDecode] /Length ${imageHex.length + 1} >>\nstream\n${imageHex}>\nendstream`);
   const pageRefs = [];
   for (const content of pages) {
     const stream = content;
     const streamId = addObject(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
-    const pageId = addObject(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PAGE_W} ${PAGE_H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${streamId} 0 R >>`);
+    const pageId = addObject(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PAGE_W} ${PAGE_H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> /XObject << /Im1 5 0 R >> >> /Contents ${streamId} 0 R >>`);
     pageRefs.push(`${pageId} 0 R`);
   }
   objects[1] = `<< /Type /Pages /Kids [${pageRefs.join(' ')}] /Count ${pageRefs.length} >>`;
