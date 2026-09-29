@@ -36,7 +36,7 @@ function newEstimate(title = 'Nouveau devis', lines = []) {
   return { id: uid(), title, project: '', client: '', reference: '', date: new Date().toISOString().slice(0, 10), location: '', retentionEnabled: false, retentionRate: 5, createdAt: now, updatedAt: now, lines: clone(lines) };
 }
 function modelEstimate() {
-  return newEstimate('Bordereau Elwardia — exemple', catalog.map(item => ({ ...clone(item), id: uid() })));
+  return newEstimate('Bordereau Elwardia', catalog.map(item => ({ ...clone(item), id: uid() })));
 }
 function loadSaved() {
   try {
@@ -46,7 +46,7 @@ function loadSaved() {
 }
 function cleanEstimate(raw) {
   return {
-    id: String(raw.id || uid()), title: String(raw.title || 'Devis sans titre').slice(0, 120),
+    id: String(raw.id || uid()), title: String(raw.title || 'Devis sans titre').replace(/\s+—\s+exemple$/i, '').slice(0, 120),
     project: String(raw.project || '').slice(0, 120), client: String(raw.client || '').slice(0, 120),
     reference: String(raw.reference || '').slice(0, 80), date: String(raw.date || '').slice(0, 10), location: String(raw.location || '').slice(0, 160),
     retentionEnabled: raw.retentionEnabled === true, retentionRate: Number(raw.retentionRate) === 10 ? 10 : 5,
