@@ -114,7 +114,6 @@ function createContentPage(estimate, pageIndex, includeTableHeader = true) {
   stream += textCmd(`MF : ${companyInfo.fiscalId} · Tél. : ${companyInfo.phone}`, companyX, 42, 7, '#4E626D');
   stream += textCmd(`Email : ${companyInfo.email}`, companyX, 53, 7, '#4E626D');
   stream += lineCmd(MARGIN, 66, PAGE_W - MARGIN, 66, '#DCE3E2', 0.6);
-  if (pageIndex === 0) stream += textCmd('BORDEREAU DE PRIX ET DEVIS DE TRAVAUX', MARGIN, 74, 11.5, '#18324A', true);
   stream += textCmd(title, MARGIN, 91, 8.5, '#3D7A68', true);
   const meta = [
     estimate.reference ? `Ref. ${estimate.reference}` : '',
