@@ -21,14 +21,14 @@ function logoHex() {
   return hex;
 }
 const columns = [
-  { key:'ref', label:'Ref.', width:36 },
-  { key:'lot', label:'Lot', width:94 },
-  { key:'description', label:'Désignation', width:281 },
-  { key:'unit', label:'Unité', width:34 },
-  { key:'quantity', label:'Qté', width:42, align:'right' },
-  { key:'unitPrice', label:'PU HT', width:64, align:'right' },
-  { key:'vatRate', label:'TVA %', width:40, align:'right' },
-  { key:'ht', label:'Total HT', width:65, align:'right' },
+  { key:'ref', label:'Ref.', width:40 },
+  { key:'lot', label:'Lot', width:110 },
+  { key:'description', label:'Désignation', width:345 },
+  { key:'unit', label:'Unité', width:42 },
+  { key:'quantity', label:'Qté', width:48, align:'right' },
+  { key:'unitPrice', label:'PU HT', width:82, align:'right' },
+  { key:'vatRate', label:'TVA %', width:45, align:'right' },
+  { key:'ht', label:'Total HT', width:74, align:'right' },
 ];
 
 function round3(value) { return Math.round((Number(value || 0) + Number.EPSILON) * 1000) / 1000; }
