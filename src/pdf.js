@@ -120,8 +120,6 @@ function createContentPage(estimate, pageIndex, includeTableHeader = true) {
     const locationLines = wrapText(`Lieu : ${estimate.location}`, CONTENT_W, 7).slice(0, 2);
     locationLines.forEach(line => { stream += textCmd(line, MARGIN, nextTop, 7, '#4E626D'); nextTop += 9; });
   }
-  const noticeTop = Math.min(nextTop + 3, TABLE_TOP - 10);
-  stream += textCmd('Descriptions abrégées pour le chiffrage : vérifier les spécifications dans le bordereau source avant émission.', MARGIN, noticeTop, 6.5, '#8B774A');
   let y = TABLE_TOP;
   if (includeTableHeader) {
     stream += rectCmd(MARGIN, y, CONTENT_W, 19, '#18324A');
@@ -171,7 +169,6 @@ function addRow(stream, line, top, index) {
 }
 function pageFooter(stream, page, pageCount) {
   stream += lineCmd(MARGIN, FOOTER_TOP, PAGE_W - MARGIN, FOOTER_TOP, '#DCE3E2', 0.55);
-  stream += textCmd('Estimateur Elwardia · Montants en DT · Vérifiez le document source avant émission du devis.', MARGIN, FOOTER_TOP + 7, 6.5, '#75838A');
   stream += textCmd(`Page ${page} / ${pageCount}`, PAGE_W - MARGIN, FOOTER_TOP + 7, 6.5, '#75838A', false, 'right');
   return stream;
 }
@@ -207,21 +204,6 @@ function summaryBlock(estimate, page) {
   stream += textCmd('NET À PAYER APRÈS RETENUE', MARGIN + 8, y + 6, 8.5, '#245E49', true);
   stream += textCmd(moneyText(netPayable, true), PAGE_W - MARGIN - 8, y + 6, 8.5, '#245E49', true, 'right');
   y += 30;
-  stream += textCmd('TOTAL TTC EN TOUTES LETTRES', MARGIN + 8, y, 6.5, '#5E6C72', true);
-  y += 9;
-  for (const line of wrapText(amountInWords(totalTtc), CONTENT_W - 16, 7)) {
-    stream += textCmd(line, MARGIN + 8, y, 7, '#334B59');
-    y += 9;
-  }
-  if (retentionEnabled) {
-    y += 3;
-    stream += textCmd('NET À PAYER APRÈS RETENUE EN TOUTES LETTRES', MARGIN + 8, y, 6.5, '#5E6C72', true);
-    y += 9;
-    for (const line of wrapText(amountInWords(netPayable), CONTENT_W - 16, 7)) {
-      stream += textCmd(line, MARGIN + 8, y, 7, '#334B59');
-      y += 9;
-    }
-  }
   y += 5;
   stream += textCmd('ARRÊTÉ LE PRÉSENT DEVIS À LA SOMME DE :', MARGIN + 8, y, 6.5, '#5E6C72', true);
   y += 9;
